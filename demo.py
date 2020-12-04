@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
-import engine3d
+from engine3d import Mesh, Quaternion, Camera
+import engine3d as enjin
 import numpy as np
 import time
 import math
@@ -20,7 +21,7 @@ MAX_FPS = 45  # mettre ce nom de variable en majuscules est simplement une conve
 t_actuel = time.time()
 
 # - variables et fonctions utiles pour dessin 3d
-cam = engine3d.Camera((0.0, 0.0, 12.0), math.pi/2, 0)
+cam = Camera((0.0, 0.0, 12.0), math.pi/2, 0)
 sol = None  # servira à stocker un modèle 3d pour le sol
 meshes = list()  # servira à stocker des modèles 3d posés sur le sol
 
@@ -29,15 +30,15 @@ def creation_cube():
     cubeedges = np.array([[0, 1], [1, 2], [2, 3], [3, 0], [4, 5], [5, 6], [6, 7], [7, 4], [0, 4], [1, 5], [2, 6], [3, 7]])
     cubefaces = (0, 1, 2, 3), (4, 5, 6, 7), (0, 1, 5, 4), (2, 3, 7, 6), (0, 3, 7, 4), (1, 2, 6, 5)
     cubecolors = (100, 100, 100), (110, 110, 110), (120, 120, 120), (130, 130, 130), (140, 140, 140), (150, 150, 150)
-    res = engine3d.Mesh("gros_cube", 8, cubeedges, cubefaces, cubecolors, 2)
-    res.vertices[0] = engine3d.Vector4(-1.0, -1.0, 0, 1)
-    res.vertices[1] = engine3d.Vector4(1.0, -1.0, 0, 1)
-    res.vertices[2] = engine3d.Vector4(1.0, 1.0, 0, 1)
-    res.vertices[3] = engine3d.Vector4(-1.0, 1.0, 0, 1)
-    res.vertices[4] = engine3d.Vector4(-1.0, -1.0, 10.0, 1)
-    res.vertices[5] = engine3d.Vector4(1.0, -1.0, 10.0, 1)
-    res.vertices[6] = engine3d.Vector4(1.0, 1.0, 10.0, 1)
-    res.vertices[7] = engine3d.Vector4(-1.0, 1.0, 10.0, 1)
+    res = Mesh("gros_cube", 8, cubeedges, cubefaces, cubecolors, Mesh.FULL_RENDER_TYPE)
+    res.vertices[0] = Quaternion(-1.0, -1.0, 0, 1)
+    res.vertices[1] = Quaternion(1.0, -1.0, 0, 1)
+    res.vertices[2] = Quaternion(1.0, 1.0, 0, 1)
+    res.vertices[3] = Quaternion(-1.0, 1.0, 0, 1)
+    res.vertices[4] = Quaternion(-1.0, -1.0, 10.0, 1)
+    res.vertices[5] = Quaternion(1.0, -1.0, 10.0, 1)
+    res.vertices[6] = Quaternion(1.0, 1.0, 10.0, 1)
+    res.vertices[7] = Quaternion(-1.0, 1.0, 10.0, 1)
     return res
 
 
@@ -93,7 +94,7 @@ while not game_over:
     
     # --- etape trois : maj affichage
     surf.fill(couleur_bg)
-    engine3d.render_all_meshes([sol], cam, surf)
+    enjin.render_all_meshes([sol], cam, surf)
     pygame.display.update()
     horloge_jeu.tick(MAX_FPS)  # provoque une micro-pause après dessin de l'écran, si MAX_FPS était dépassé
 
